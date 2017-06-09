@@ -5,9 +5,11 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 
+
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -26,7 +28,7 @@ public class PrescriptionService {
 	@POST
 	@Produces({MediaType.APPLICATION_JSON})
 	
-public Response addPrescription(@HeaderParam("authorization") String authString, InputStream incomingData) {
+public Response addPrescription(@HeaderParam("authorization") String authString, InputStream incomingData) throws UtilExceptions {
 		
 		
 		
@@ -87,7 +89,36 @@ public Response getStatus(@HeaderParam("authorization") String authString, @Path
 
 		return Response.status(200).entity(response).build();
 	} 
-}
+	
+	@PUT
+	@Path("/update_status")
+	@Produces({MediaType.APPLICATION_JSON})
+	public Response getStatus(@HeaderParam("authorization") String authString, @PathParam("status") String status, @PathParam("patient_id") String patient_id,  InputStream incomingData) 
+	{
+		
+StringBuilder requestString = GenericUtils.readInputRequestString(incomingData);
+		
+		
+		String response = null;
+		System.out.println(requestString.toString());
+		
+		try { 
+			PrescriptionUtil.updatestatus(status, patient_id);
+		
+	}
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+
+		return Response.status(200).entity(response).build();
+
+	}
+	}
+	
+	
 
 
 

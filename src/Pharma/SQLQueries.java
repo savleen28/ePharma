@@ -38,6 +38,9 @@ public class SQLQueries {
 	    
 	    public static final String GET_STATUS_DETAILS =
 	    		"select p.patient_first_name,p.patient_lastname,m.medicine_name,pr.status from savleen.patient p, savleen.prescription_details pd, savleen.prescription pr, savleen.medicine_master m where p.patient_id = pr.patient_id and pd.prescription_id = pr.prescription_id and pr.status = ? and m.medicine_id = pd.medicine_id";
+	    
+	    public static final String UPDATE_STATUS =
+	    		"update savleen.prescription set status = ? where patient_id = ?";
 }
 
 

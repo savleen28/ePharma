@@ -18,6 +18,7 @@ import Pharma.Patient;
 import Pharma.Prescription;
 import Pharma.PrescriptionData;
 import Pharma.SQLQueries;
+import Pharma.UtilExceptions;
 
 
 
@@ -192,6 +193,28 @@ public static String addPrescriptionMaster(Prescription inPrescription) throws S
 				}
 				
 	}
+			public static void updatestatus(String status, String patent_id) throws SQLException {
+				Connection con = null;
+				CallableStatement cStmt = null;
+				try {
+					
+					con = BKDatabaseUtil.getConnection();
+					cStmt = con.prepareCall(SQLQueries.UPDATE_STATUS);
+					cStmt.setString(1, status);
+					cStmt.setString(2, patent_id);
+					
+					
+		            cStmt.execute();
+					
+				} catch (SQLException | NamingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				finally {
+					cStmt.close(); con.close();
+				}
+				
+	}
 			
 			
 			public static List<Status> getStatusDetails(String status) throws SQLException {
@@ -232,6 +255,8 @@ public static String addPrescriptionMaster(Prescription inPrescription) throws S
 			
 				
 			public static void createPrescription(Prescription inPrescription) throws SQLException // change the return type
+, UtilExceptions
+
 			
 			{
 				
@@ -249,15 +274,16 @@ public static String addPrescriptionMaster(Prescription inPrescription) throws S
 					String medId = getMedicineId(rowItem.medicineName);
 					if(medId == null)
 					{
-						System.out.println("throw exception");
+					
+						throw new UtilExceptions("medicine not available!!");
 					}
 					else{
 						int med_count = 0;
 						med_count = rowItem.duration * rowItem.frequency;
 						if(getMedicineCount(rowItem.medicineName) < med_count){
-							System.out.println("throw not enough medicine expection");
-							System.out.println("getMedicineCount(rowItem.medicineName)  " + getMedicineCount(rowItem.medicineName));
-							System.out.println("med_count  "+ med_count);
+							
+							throw new UtilExceptions("not enough medicine!!");
+							
 						}
 						else{
 						
